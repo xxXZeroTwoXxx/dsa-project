@@ -1,0 +1,154 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+const int MAX_BOOKS = 100;
+
+struct Book {
+    string title;
+    string author;
+    bool is_available;
+};
+
+class Library {
+private:
+    Book books[MAX_BOOKS];
+    int num_books;
+    int front, rear;
+    int capacity;
+
+public:
+
+    Library(int cap) {
+        num_books = 0;
+        front = 0;
+        rear = -1;
+        capacity = cap;
+    }
+
+
+    void addBook(string title, string author) {
+        if (num_books == capacity) {
+            cout << "Library is full!" << endl;
+            return;
+        }
+
+
+        Book new_book;
+        new_book.title = title;
+        new_book.author = author;
+        new_book.is_available = true;
+
+        books[++rear] = new_book;
+        num_books++;
+        cout << "Book added successfully!" << endl;
+    }
+
+    void lendBook(string title) {
+        if (num_books == 0) {
+            cout << "Library is empty!" << endl;
+            return;
+        }
+
+        bool found = false;
+        for (int i = 0; i < num_books; i++) {
+            if (books[i].title == title && books[i].is_available) {
+                books[i].is_available = false;
+                cout << "Book lent successfully!" << endl;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            cout << "Book not found or not available!" << endl;
+        }
+    }
+
+    void returnBook(string title) {
+        if (num_books == 0) {
+            cout << "Library is empty!" << endl;
+            return;
+        }
+
+        bool found = false;
+        for (int i = 0; i < num_books; i++) {
+            if (books[i].title == title && !books[i].is_available) {
+                books[i].is_available = true;
+                cout << "Book returned successfully!" << endl;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            cout << "Book not found or already available!" << endl;
+        }
+    }
+
+    void displayAllBooks() {
+        if (num_books == 0) {
+            cout << "Library is empty!" << endl;
+            return;
+        }
+
+        cout << "List of books in the library:" << endl;
+        for (int i = 0; i < num_books; i++) {
+            cout << books[i].title << " by " << books[i].author << " [";
+            if (books[i].is_available) {
+                cout << "Available";
+            } else {
+                cout << "Not available";
+            }
+            cout << "]" << endl;
+        }
+    }
+};
+
+int main() {
+    Library library(MAX_BOOKS);
+    int choice;
+    string title, author;
+
+    do {
+        cout << endl;
+        cout << "Library System Menu" << endl;
+        cout << "1. Add book" << endl;
+        cout << "2. Lend book" << endl;
+        cout << "3. Return book" << endl;
+        cout << "4. Display all books" << endl;
+        cout << "5. Exit" << endl;
+    	cin>>choice;
+    	
+    switch (choice) {
+        case 1:
+            cout << "Enter title of book: ";
+            cin >> title;
+            cout << "Enter author of book: ";
+            cin >> author;
+            library.addBook(title, author);
+            break;
+        case 2:
+            cout << "Enter title of book to lend: ";
+            cin >> title;
+            library.lendBook(title);
+            break;
+        case 3:
+            cout << "Enter title of book to return: ";
+            cin >> title;
+            library.returnBook(title);
+            break;
+        case 4:
+            library.displayAllBooks();
+            break;
+        case 5:
+            cout << "Exiting program" << endl;
+            break;
+        default:
+            cout << "Invalid choice. Please enter a number between 1 and 5." << endl;
+            break;
+    }
+} while (choice != 5);
+
+return 0;
+}
